@@ -1302,6 +1302,11 @@
     "inherits" "^2.0.4"
     "readable-stream" "^3.4.0"
 
+"bluebird@^3.4.7":
+  "integrity" "sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg=="
+  "resolved" "https://registry.npmmirror.com/bluebird/-/bluebird-3.7.2.tgz"
+  "version" "3.7.2"
+
 "brace-expansion@^1.1.7":
   "integrity" "sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA=="
   "resolved" "https://registry.npmmirror.com/brace-expansion/-/brace-expansion-1.1.11.tgz"
@@ -2278,6 +2283,13 @@
   "integrity" "sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA=="
   "resolved" "https://registry.npmmirror.com/mute-stream/-/mute-stream-0.0.8.tgz"
   "version" "0.0.8"
+
+"node-command-line@^1.0.2":
+  "integrity" "sha512-EvdSha4sa/yzuzS/K8/z1PI2AoAu+L7Bpr6CO7iez9GbniFa4Lh74yAH5Q/iAw3sPr5ORYeS2cnwaWWZoT40/w=="
+  "resolved" "https://registry.npmmirror.com/node-command-line/-/node-command-line-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "bluebird" "^3.4.7"
 
 "node-environment-flags@^1.0.5":
   "integrity" "sha512-5Evy2epuL+6TM0lCQGpFIj6KwiEsGh1SrHUhTbNX+sLbBtjidPZFAnVK9y5yU1+h//RitLbRHTIMyxQPtxMdHw=="

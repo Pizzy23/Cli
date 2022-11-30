@@ -1,101 +1,37 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
+import { Questions } from "./questions";
 
 console.log(chalk.gray("Bem vindo ao sistema automatizado."));
 
-class Cli {
-  noController: any;
-  questions: any;
-  quantity: any;
-  exists: any;
-
-  private _setquantity() {
-    return (this.quantity = [
-      {
-        type: "input",
-        name: "value",
-        message: "Quantos deseja criar?",
-        default: "",
-      },
-    ]);
-  }
-  private _setquestions() {
-    return (this.questions = [
-      {
-        type: "expand",
-        name: "funcion",
-        message: "Qual função deseja?",
-        choices: [
-          {
-            key: "C",
-            name: "Criar UseCase",
-            value: "useCase",
-          },
-          {
-            key: "A",
-            name: "Criar Api",
-            value: "api",
-          },
-          {
-            key: "D",
-            name: "Criar DTO",
-            value: "dto",
-          },
-          {
-            key: "S",
-            name: "Criar Services",
-            value: "service",
-          },
-        ],
-      },
-    ]);
-  }
-  private _setnoController() {
-    return (this.noController = [
-      {
-        type: "input",
-        name: "nameProject",
-        message: "Qual o nome do projeto?",
-        default: "",
-      },
-      {
-        type: "input",
-        name: "useCase",
-        message: "Quantos UseCase?",
-        default: "0",
-      },
-      {
-        type: "input",
-        name: "dto",
-        message: "Deseja quantos DTO?",
-        default: "0",
-      },
-      {
-        type: "input",
-        name: "service",
-        message: "Deseja quantos Service?",
-        default: "0",
-      },
-    ]);
-  }
-  private _setExists() {
-    return (this.exists = [
-      {
-        type: "confirm",
-        name: "create",
-        message: "Projeto ja existente?",
-        default: false,
-      },
-    ]);
-  }
-  start() {
+class Cli extends Questions {
+  starter() {
     this._setExists();
     this._setnoController();
     this._setquestions();
     this._setquantity();
-    this.validationProject();
+    this.menu();
     return;
   }
+
+  private menu() {
+    inquirer.prompt(this._setMainMenu()).then((answers) => {
+      if (answers.funcion == "tuto") {
+        return this.tutorial();
+      }
+      return this.validationProject();
+    });
+  }
+  private restart() {
+    this.menu();
+  }
+  private tutorial() {
+    inquirer.prompt(this._setTutorial()).then((answers) => {
+      this.menu();
+    });
+  }
+  private creation() {}
+
   private validationProject() {
     inquirer.prompt(this.exists).then((answers) => {
       if (answers.create === false) {
@@ -106,29 +42,59 @@ class Cli {
   }
   private noProject() {
     inquirer.prompt(this._setnoController()).then((answers) => {
-      console.log(chalk.green("\nFoi criado com sucesso!"));
-      console.log(answers);
-      return
-    });
-  }
-  private existProject(): any {
-    inquirer.prompt(this._setquestions()).then((answers) => {
-      let value = {
-        type: answers,
-        amount: answers,
+      let obj = {
+        nameProject: answers.nameProject,
+        useCase: parseInt(answers.useCase),
+        dto: parseInt(answers.dto),
+        service: parseInt(answers.service),
       };
-      inquirer.prompt(this._setquantity()).then((answers) => {
-        value.amount = answers;
-        value = {
-          type: value.type.funcion,
-          amount: value.amount.value,
-        };
-        console.log(chalk.green("\nFoi criado com sucesso!"));
-        console.log(value);
-      });
+      if (
+        Number.isNaN(obj.dto) ||
+        Number.isNaN(obj.service) ||
+        Number.isNaN(obj.useCase)
+      ) {
+        return this.error("num");
+      }
+      console.log(chalk.green("\nFoi criado com sucesso!"));
+      console.log(obj);
+      return this.restart();
     });
   }
+
+  private existProject(): any {
+    try {
+      inquirer.prompt(this._setquestions()).then((answers) => {
+        let value = {
+          type: answers,
+          amount: answers,
+        };
+        inquirer.prompt(this._setquantity()).then((answers) => {
+          value.amount = answers;
+          value = {
+            type: value.type.funcion,
+            amount: parseInt(value.amount.value),
+          };
+          if (!value.amount) {
+            console.log(chalk.red("Erro apenas numeros."));
+            return this.restart();
+          }
+          console.log(chalk.green("\nFoi criado com sucesso!"));
+          console.log(value);
+          return this.restart();
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  private error(err: string) {
+    if (err == "num") {
+      console.log(chalk.red(chalk.bold("Error Apenas numero")));
+      return this.restart();
+    }
+  }
+
 }
 
 const command = new Cli();
-command.start();
+command.starter();
